@@ -13,6 +13,7 @@ model User {
   userMail  String   @unique
   userPhone String   @unique
   userRole  String   // (Student, Teacher, Institute)
+  password  String
   sentMessages    Message[] @relation("SentMessages")
   receivedMessages Message[] @relation("ReceivedMessages")
   status    Status?  
