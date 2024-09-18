@@ -15,6 +15,7 @@ class AuthUserController {
         return res.status(409).json({
           message: 'User already registered',
           status: 409,
+          data : user
         });
       }
 

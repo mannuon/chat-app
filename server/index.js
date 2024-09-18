@@ -1,15 +1,19 @@
 const express = require('express');
 const authroutes = require('./routes/authroute');
-// const protectedRoute = require('./routes/protected'); 
+const cors = require('cors')
+
 
 const app = express();
 
+
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));  
 app.use(express.json());
 
 
 app.use('/api/auth', authroutes);
-// app.use('/api/protected', protectedRoute);  
+
+
 
 const port = 3001;
 

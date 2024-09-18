@@ -3,6 +3,9 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import 'dotenv/config'
+import { toast } from 'react-hot-toast';
 
 
 
@@ -10,11 +13,13 @@ export default function Signup() {
 
   const router = useRouter();
 
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    role: '',
+    userName: '',
+    userMail: '',
+    userPhone: '',
+    userRole: '',
+    password: '',
   });
 
   const handleChange = (e) => {
@@ -29,10 +34,30 @@ export default function Signup() {
     router.push('/signin'); 
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can handle the form submission, like sending data to the backend
     console.log(formData);
+
+    try {
+      
+        const response = await axios.post(`http://localhost:3001/api/auth/register`, formData)
+
+       if (response.status === 200) {
+        console.log('User registered successfully:', response.data);
+        toast.success('User created successfully!')
+        router.push('/signin'); 
+        }
+        else if(response.status === 409) {
+          toast.success('user already register')
+
+        }else{
+          toast.success('something went wrong !!')
+        }
+
+
+    } catch (error) {
+      toast.error(error.message)
+    }
   };
 
   return (
@@ -43,14 +68,15 @@ export default function Signup() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium">
+            <label htmlFor="name" className="block text-sm font-bold">
               Name
             </label>
             <input
+            placeholder="Your Name"
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="userName"
+              name="userName"
+              value={formData.userName}
               onChange={handleChange}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-200"
               required
@@ -59,14 +85,15 @@ export default function Signup() {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
+            <label htmlFor="userMail" className="block text-sm font-bold">
               Email
             </label>
             <input
+            placeholder="example@gmail.com"
               type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              id="userMail"
+              name="userMail"
+              value={formData.userMail}
               onChange={handleChange}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-200"
               required
@@ -75,14 +102,15 @@ export default function Signup() {
 
           {/* Phone Number */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium">
+            <label htmlFor="userPhone" className="block text-sm font-bold">
               Phone Number
             </label>
             <input
+              placeholder="+91-737098***"
               type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
+              id="userPhone"
+              name="userPhone"
+              value={formData.userPhone}
               onChange={handleChange}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-200"
               required
@@ -91,13 +119,14 @@ export default function Signup() {
 
           {/* role */}
           <div>
-            <label htmlFor="role" className="block text-sm font-medium">
-              role
+            <label htmlFor="userRole" className="block text-sm font-bold">
+              Role
             </label>
             <select
-              id="role"
-              name="role"
-              value={formData.role}
+    
+              id="userRole"
+              name="userRole"
+              value={formData.userRole}
               onChange={handleChange}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-200"
               required
@@ -108,6 +137,25 @@ export default function Signup() {
               <option value="institute">Institute</option>
             </select>
           </div>
+
+
+           {/* Password  */}
+           <div>
+            <label htmlFor="password" className="block text-sm font-bold">
+              Password
+            </label>
+            <input
+              
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-200"
+              required
+            />
+          </div>
+
 
           {/* Submit Button */}
           <div className="text-center">
