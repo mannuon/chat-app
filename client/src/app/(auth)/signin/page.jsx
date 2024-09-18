@@ -1,13 +1,18 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
 
+
 export default function Login() {
 
+
+
+
+  
   
 
 
@@ -32,14 +37,14 @@ export default function Login() {
       const res = await axios.post(`http://localhost:3001/api/auth/login`,formData)
 
       if(res.status === 200){
-        const token = 'myToken $' + res.data.token
+        const token = '$myToken ' + res.data.token
         console.log(token)
         if(token){
           console.log(token)
           localStorage.setItem('token', token);
         }
         toast.success('login successfully !')
-        router.push('/chat')
+        router.push('/dashboard')
 
       }
       else{

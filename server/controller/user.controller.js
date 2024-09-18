@@ -79,7 +79,7 @@ class AuthUserController {
         const token = jwt.sign(
           { userId: user.userId },
           process.env.JWT_SECRET,
-          { expiresIn: '24h' }
+          { expiresIn: '365d' }
         );
 
 
