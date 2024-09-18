@@ -2,25 +2,61 @@
 
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
+
 
 export default function Login() {
+
+  
+
+
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
+    userMail: '',
     password: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange =   (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+
+      const res = await axios.post(`http://localhost:3001/api/auth/login`,formData)
+
+      if(res.status === 200){
+        const token = 'myToken $' + res.data.token
+        console.log(token)
+        if(token){
+          console.log(token)
+          localStorage.setItem('token', token);
+        }
+        toast.success('login successfully !')
+        router.push('/chat')
+
+      }
+      else{
+        toast.error('Something went wrong')
+      }
+      
+    } catch (error) {
+
+
+      if(error.status=== 401){
+        toast.error('Invalid credentials')
+      }
+      
+      
+    }
     
-    console.log(formData);
+
    
   };
 
@@ -36,14 +72,14 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium">
+            <label htmlFor="userMail" className="block text-sm font-bold">
               Email
             </label>
             <input
               type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              id="userMail"
+              name="userMail"
+              value={formData.userMail}
               onChange={handleChange}
               className="w-full px-4 py-2 mt-2 border rounded-md focus:ring focus:ring-indigo-200"
               required
@@ -52,7 +88,7 @@ export default function Login() {
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium">
+            <label htmlFor="password" className="block text-sm font-bold">
               Password
             </label>
             <input
